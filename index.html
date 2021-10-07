@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>科技园疫情防控管理系统</title>
+    <style>
+    *{
+        margin:0;
+        padding:0;
+    }
+    [v-cloak]{
+        display:none;
+    }
+    #app{
+        min-height: 100vh;
+        background:rgb(247, 245, 245);
+    }
+    .my-top{
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        padding:10px 15px;
+        background: white;
+    }
+    .my-top>img{
+        width:20px;
+        height:auto;
+        cursor: pointer;
+    }
+    .my-content{
+        padding:25px 15px 0;
+        text-align: center;
+    }
+    .my-content-t{
+        box-sizing: border-box;
+        width:calc(100vw - 30px);
+        border-radius:10px;
+        padding:0 20px 10px;
+        box-shadow: 0 0 5px 0 #ccc;
+        background: white;
+        margin-bottom: 10px;
+    }
+    .content-tt{
+        line-height: 60px;
+        font-size: 23px;
+    }
+    .content-tc{
+        font-size: 12px;
+        color:rgb(197 195 195);
+    }
+    .content-img{
+        position: relative;
+        width:100%;
+        height:calc(100vw - 70px);
+    }
+    .content-img>img{
+        position: absolute;
+        height:auto;
+        animation: My 3s infinite;
+    }
+    @keyframes My{
+        0%{
+            left:10%;
+            top:10%;
+            width:80%;
+            height:80%;
+        }
+        50%{
+            left:-15px;
+            top:-15px;
+            width:calc(100% + 30px);
+            height:calc(100% + 30px);
+        }
+        100%{
+            left:10%;
+            top:10%;
+            width:80%;
+            height:80%;
+        }
+    }
+    .content-tf{
+        font-size: 12px;
+        color:rgb(197 195 195);
+    }
+    .my-content-c{
+        font-size:18px;
+        color:red;
+        margin-bottom: 3px;
+    }
+    
+    .my-content-f{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+    .my-content-f>span{
+        font-size: 12px;
+        color:rgb(197 195 195);
+        cursor: pointer;
+    }
+    .my-content-f>img{
+        width: 15px;
+        margin-left:3px;
+        height:auto;
+        cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="my-top">
+            <img src="./img/back.png" alt="">
+            <div>
+                今日通行码
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <div class="my-content">
+            <div class="my-content-t">
+                <div class="content-tt">
+                    今日可入园
+                </div>
+                <div class="content-tc">
+                    二维码当日有效，扫码入园后隐藏
+                </div>
+                <div class="content-img">
+                    <img :src="url+'?a='+num" alt="">
+                </div>
+                <div class="content-tf">
+                    进入园区，请将二维码出示园区核查人员扫码登记
+                </div>
+            </div>
+            <h4 class="my-content-c" v-if="time">
+                {{time}} 秒
+            </h4>
+            <div class="my-content-f">
+                <span  @click="refresh">{{time?'二维码剩余刷新时间':'刷新二维码'}}</span>
+                <img  @click="refresh" src="./img/refresh.png" alt="">
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.min.js"></script>
+    <script>
+        new Vue({
+            el:'#app',
+            data(){
+                return {
+                    time:0,
+                    url:'./img/qrcode.png', //二维码地址
+                    num:0,  //二维码刷新用
+                    foreground: jkm
+                }
+            },
+            created(){
+                this.time = 30;
+                this.changeTime();
+            },
+            methods:{
+                refresh(){
+                    if(this.time){
+                        return ;
+                    }
+                    this.num += 1;
+                    this.time = 30;
+                    this.changeTime();
+                },
+                changeTime(){
+                    if(this.time<1){
+                        return ;
+                    }
+                    let time = setTimeout(()=>{
+                        clearTimeout(time);
+                        this.time -= 1;
+                        this.changeTime();
+                    },1000)
+                }
+            }
+        })
+    </script>
+</body>
+</html>
